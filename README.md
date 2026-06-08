@@ -4,7 +4,7 @@ Structure-informed reconstruction of sparse polymer property profiles.
 
 PolyTab is the code companion for the manuscript **"PolyTab: Structure-Informed Reconstruction of Sparse Polymer Property Profiles"**. The framework reconstructs fragmented polymer property records into multi-property profiles by combining PSMILES-derived structural embeddings with partially observed property tables. It uses quartile-based classification for distribution-aware initialization and stacked adaptive regression layers for coarse-to-fine refinement while preserving observed entries.
 
-## Repository Layout
+## Repository Layout 
 
 ```text
 polytab/
