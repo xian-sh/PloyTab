@@ -2,12 +2,19 @@
 
 Structure-informed reconstruction of sparse polymer property profiles.
 
-PolyTab is the code companion for the manuscript **"PolyTab: Structure-Informed Reconstruction of Sparse Polymer Property Profiles"**. The framework reconstructs fragmented polymer property records into multi-property profiles by combining PSMILES-derived structural embeddings with partially observed property tables. It uses quartile-based classification for distribution-aware initialization and stacked adaptive regression layers for coarse-to-fine refinement while preserving observed entries.
+Polymer discovery requires multi-property screening, but experimental data is frequently fragmented, resulting in profile-level sparsity where individual polymers have only partially reported property records. This incompleteness hinders multi-constraint decision-making, correlation analysis, and comprehensive materials selection. Existing solutions are limited: structure-based models often underuse co-observed property information, while table-based imputation methods neglect critical structural priors, leading to unstable associations under extreme sparsity.
 <!-- <img width="825" height="442" alt="image" src="https://github.com/user-attachments/assets/4fd9303f-ae12-4daf-bbf0-23db9f13d05b" /> -->
 
 ![PolyTab TOC](https://github.com/user-attachments/assets/85c653ad-b10d-4dad-b8ff-96a5abcfcd80)
 *Figure 1: PSMILES → embeddings → quartile init → adaptive regression → complete profiles.*
+## Architecture
+We propose PolyTab, a structure-informed framework for reconstructing partially observed polymer property profiles. PolyTab integrates:
 
+    Structural Priors: PSMILES-derived embeddings from a pretrained polymer language model.
+    Tabular Context: Observed property values, missingness masks, and statistical priors.
+    Hybrid Architecture: A quartile-based classifier for distribution-aware initial estimates, refined by stacked adaptive regression layers that preserve experimentally observed entries.
+
+This approach effectively combines structural information with inter-property correlations, enabling robust profile reconstruction and improved downstream prediction even under highly sparse data conditions.
 ![PolyTab main figure](https://github.com/user-attachments/assets/3a087339-f999-4615-8624-228144666185)
 *Figure 2: Architecture details (a–c) and reconstruction performance across sparsity levels (d).*
 
@@ -58,13 +65,13 @@ The benchmark tables are in `data/`. Main task keys:
 
 | Task | CSV file | SMILES column |
 | --- | --- | --- |
-| `ele` | `Table_Electronic.csv` | `SMILES` |
-| `energy` | `Table_Energy.csv` | `SMILES` |
-| `barrer` | `Table_Permeability_Barrer.csv` | `SMILES` |
-| `dft` | `DFT_properties_simple.csv` | `SMILES` |
-| `md` | `MD_properties_simple.csv` | `SMILES` |
-| `newmd` | `polymer_MD.csv` | `smiles_list` |
-| `qc` | `calculated_polymer_data.csv` | `psmiles` |
+| `Electronic` | `Table_Electronic.csv` | `SMILES` |
+| `Energy` | `Table_Energy.csv` | `SMILES` |
+| `Gas Barrer` | `Table_Permeability_Barrer.csv` | `SMILES` |
+| `DFT` | `DFT_properties_simple.csv` | `SMILES` |
+| `MD` | `MD_properties_simple.csv` | `SMILES` |
+| `PolyOmics (MD) Dataset` | `polymer_MD.csv` | `smiles_list` |
+| `QC` | `calculated_polymer_data.csv` | `psmiles` |
 
 See `data/README.md` for row counts and property-table notes.
 
@@ -114,6 +121,10 @@ python scripts/plot_md_results.py
 
 Figures are saved to `figures/`.
 
+## Data and Model Availability
+
+The pre-trained model weights and experimental process data are available in this repository. For long-term preservation and citation, a citable archived version of the research data and code has been deposited in Zenodo at https://zenodo.org/records/20602506.
+
 ## Citation
 
 ```bibtex
@@ -129,7 +140,6 @@ Figures are saved to `figures/`.
 Also see `CITATION.cff`.
 
 ## License
-
 No license file has been specified yet. Add a license before making the repository public if reuse terms should be explicit.
 # Acknowledgements
 This work was supported by the National Natural Science Foundation of China (U23A2090, 22293011, 22403087) and the Fundamental Research Funds for the Central Universities (WK2060000084). The authors acknowledge the support from the Supercomputing Center of the University of Science and Technology of China. The AI-driven experiments, simulations and model training were performed on the robotic AI-Scientist platform of the Chinese Academy of Sciences. During the preparation of this manuscript, the authors used LLM for language polishing and improving the overall readability of the text. The authors reviewed and edited the AI-assisted output and take full responsibility for the content of the published article.
