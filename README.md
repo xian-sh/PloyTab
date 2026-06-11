@@ -1,142 +1,181 @@
-# Structure-informed reconstruction of sparse polymer property profiles.
-Polymer discovery requires multi-property screening, but experimental data is frequently fragmented, resulting in profile-level sparsity where individual polymers have only partially reported property records. This incompleteness hinders multi-constraint decision-making, correlation analysis, and comprehensive materials selection. Existing solutions are limited: structure-based models often underuse co-observed property information, while table-based imputation methods neglect critical structural priors, leading to unstable associations under extreme sparsity.
-<!-- <img width="825" height="442" alt="image" src="https://github.com/user-attachments/assets/4fd9303f-ae12-4daf-bbf0-23db9f13d05b" /> -->
+# 🧬 PolyTab
+
+### Structure-Informed Reconstruction of Sparse Polymer Property Profiles
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20602506.svg)](https://doi.org/10.5281/zenodo.20602506)
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+
+[Paper](#citation) • [Installation](#installation) • [Datasets](#datasets) • [Quick Start](#running-polytab) • [Zenodo Archive](https://zenodo.org/records/20602506)
+
+---
+
+</div>
+
+## 🎯 Overview
+
+Polymer discovery demands multi-property screening, yet experimental data remains severely fragmented—individual polymers often have only **partial property records**, creating profile-level sparsity that undermines multi-constraint decision-making and comprehensive materials selection.
+
+**PolyTab** solves this by fusing structural priors with tabular context: PSMILES embeddings from pretrained polymer language models meet adaptive regression layers that respect observed entries while reconstructing missing values.
 
 ![PolyTab TOC](https://github.com/user-attachments/assets/85c653ad-b10d-4dad-b8ff-96a5abcfcd80)
-*Figure 1: PSMILES → embeddings → quartile init → adaptive regression → complete profiles.*
-## Architecture
-We propose PolyTab, a structure-informed framework for reconstructing partially observed polymer property profiles. PolyTab integrates:
 
-    Structural Priors: PSMILES-derived embeddings from a pretrained polymer language model.
-    Tabular Context: Observed property values, missingness masks, and statistical priors.
-    Hybrid Architecture: A quartile-based classifier for distribution-aware initial estimates, refined by stacked adaptive regression layers that preserve experimentally observed entries.
+**Figure 1** | PSMILES → embeddings → quartile init → adaptive regression → complete profiles
 
-This approach effectively combines structural information with inter-property correlations, enabling robust profile reconstruction and improved downstream prediction even under highly sparse data conditions.
+</div>
+
+---
+
+## ⚙️ Architecture
+
 ![PolyTab main figure](https://github.com/user-attachments/assets/3a087339-f999-4615-8624-228144666185)
-*Figure 2: Architecture details (a–c) and reconstruction performance across sparsity levels (d).*
 
-## Repository Layout 
+**Figure 2** | Hybrid architecture (a–c) and reconstruction performance across sparsity regimes (d)
 
-```text
-polytab/
-  data/                  Polymer property tables used in the benchmarks
-  docs/                  Manuscript summary and reference notes
-  figures/               Generated figures
-  legacy/                Original notebook-exported code kept for traceability
-  models/                Local model files, including TabPFN checkpoint and polyBERT path
-  notebooks/             Example notebook
-  results/               Experiment outputs
-  scripts/               Command-line runners and plotting scripts
-  src/polytab/           Main PolyTab package
-```
+</div>
 
-## Installation
+**Core Components:**
+- **Structural Priors**: Polymer embeddings from pretrained language models
+- **Tabular Context**: Observed values + missingness masks + statistical distributions
+- **Hybrid Pipeline**: Quartile classifier → stacked adaptive regression → preserved experimental entries
+
+---
+
+## 📦 Installation
 
 ```bash
 python -m venv .venv
-python -m pip install --upgrade pip
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install --upgrade pip
 pip install -e .
 ```
 
-For a full reproduction environment, install the packages listed in `requirements.txt`. GPU execution requires a PyTorch build compatible with your CUDA version.
+**GPU Support**: Install PyTorch with CUDA compatibility for your system.
 
-## Model Files
+---
 
-PolyTab expects the pretrained polymer language model under:
+## 📊 Datasets
 
-```text
-models/polyBERT/
-```
+| Task | File | SMILES Column | Rows |
+|------|------|---------------|------|
+| Electronic | `Table_Electronic.csv` | `SMILES` | — |
+| Energy | `Table_Energy.csv` | `SMILES` | — |
+| Gas Barrier | `Table_Permeability_Barrer.csv` | `SMILES` | — |
+| DFT | `DFT_properties_simple.csv` | `SMILES` | — |
+| MD | `MD_properties_simple.csv` | `SMILES` | — |
+| PolyOmics | `polymer_MD.csv` | `smiles_list` | — |
+| QC | `calculated_polymer_data.csv` | `psmiles` | — |
 
-You can override this path with:
+All datasets are in `data/`. See [`data/README.md`](data/README.md) for details.
 
-```bash
-set POLYBERT_MODEL_PATH=path\to\polyBERT
-```
+---
 
-The TabPFN checkpoint is stored in `models/tabpfn-v2.5-regressor-v2.5_default.ckpt`. The repository includes Git LFS rules for checkpoint-like files; run `git lfs install` before committing large model weights.
-
-## Datasets
-
-The benchmark tables are in `data/`. Main task keys:
-
-| Task | CSV file | SMILES column |
-| --- | --- | --- |
-| `Electronic` | `Table_Electronic.csv` | `SMILES` |
-| `Energy` | `Table_Energy.csv` | `SMILES` |
-| `Gas Barrer` | `Table_Permeability_Barrer.csv` | `SMILES` |
-| `DFT` | `DFT_properties_simple.csv` | `SMILES` |
-| `MD` | `MD_properties_simple.csv` | `SMILES` |
-| `PolyOmics (MD) Dataset` | `polymer_MD.csv` | `smiles_list` |
-| `QC` | `calculated_polymer_data.csv` | `psmiles` |
-
-See `data/README.md` for row counts and property-table notes.
-
-## Running PolyTab
+## 🚀 Running PolyTab
 
 ```bash
 python scripts/run_polytab.py --task md --keep-modes keep1 keep25 keep50 keep75
 ```
 
-`keep1` corresponds to the single-property retention setting. `keep25`, `keep50`, and `keep75` retain 25%, 50%, and 75% of properties per polymer, respectively.
+**Sparsity Modes:**
+- `keep1`: Single-property retention per polymer
+- `keep25/50/75`: Retain 25%/50%/75% of properties per polymer
 
-Outputs are written to:
-
-```text
-results/<task>_polyBERT_cascade_<keep_mode>_260107_SAFE/
-```
-
-Typical output files include:
+**Outputs** → `results/<task>_polyBERT_cascade_<keep_mode>_260107_SAFE/`
 
 | File | Description |
-| --- | --- |
-| `train_set_evaluation_masked.csv` | Train-set evaluation on masked positions only |
-| `test_set_evaluation.csv` | Held-out test-set reconstruction metrics |
-| `train_test_comparison.csv` | Train/test metric summary |
-| `*_train_predictions.csv` | Reconstructed train table |
-| `*_test_predictions.csv` | Reconstructed test table |
-| `*_class_probabilities.csv` | Quartile-class probability summary |
-| `training_curve.png` | Training loss curve |
+|------|-------------|
+| `train_set_evaluation_masked.csv` | Train metrics (masked positions only) |
+| `test_set_evaluation.csv` | Test-set reconstruction performance |
+| `*_predictions.csv` | Reconstructed property tables |
+| `training_curve.png` | Loss evolution |
 
-## Running Baselines
+---
+
+## 📈 Baseline Comparisons
 
 ```bash
+# Bayesian Linear Regression
 python scripts/run_baseline.py --baseline blr --task md --keep-modes keep1
+
+# Extremely Randomized Trees
 python scripts/run_baseline.py --baseline etr --task md --keep-modes keep1
+
+# TabPFN (requires GPU)
 python scripts/run_baseline.py --baseline tabpfn --task md --keep-modes keep1 --device cuda
 ```
 
-Supported baselines are Bayesian linear regression (`blr`), extremely randomized trees (`etr`), and TabPFN (`tabpfn`).
-
-## Plotting
-
-After generating PolyTab and baseline outputs for the `newmd` task:
-
+**Generate Plots:**
 ```bash
-python scripts/plot_md_results.py
+python scripts/plot_md_results.py  # → figures/
 ```
 
-Figures are saved to `figures/`.
+---
 
-## Data and Model Availability
+## 🗂️ Repository Structure
 
-The pre-trained model weights and experimental process data are available in this repository. For long-term preservation and citation, a citable archived version of the research data and code has been deposited in Zenodo at https://zenodo.org/records/20602506.
+```
+polytab/
+├── data/                   # Benchmark property tables
+├── models/                 # Pretrained weights (polyBERT, TabPFN)
+├── src/polytab/            # Core package
+├── scripts/                # CLI runners & plotting
+├── notebooks/              # Jupyter examples
+├── results/                # Experiment outputs
+└── figures/                # Generated visualizations
+```
 
-## Citation
+---
+
+## 🔧 Model Configuration
+
+**PolyBERT Path**: `models/polyBERT/`  
+Override via: `export POLYBERT_MODEL_PATH=/custom/path`
+
+**TabPFN Checkpoint**: `models/tabpfn-v2.5-regressor-v2.5_default.ckpt`
+
+> **Note**: Large model files use Git LFS. Run `git lfs install` before committing.
+
+---
+
+## 📚 Citation
 
 ```bibtex
 @article{si2026polytab,
-  title = {Structure-Informed Reconstruction of Sparse Polymer Property Profiles},
-  author = {Si, Zhan and Ge, Bojun and Hu, Jingjing and Wang, Chen and Yu, Haizhu and Liu, Deguang and Fu, Yao},
-  journal = {journal},
-  year = {2026},
-  note = {Manuscript}
+  title   = {Structure-Informed Reconstruction of Sparse Polymer Property Profiles},
+  author  = {Si, Zhan and Ge, Bojun and Hu, Jingjing and Wang, Chen and 
+             Yu, Haizhu and Liu, Deguang and Fu, Yao},
+  journal = {Journal Name},
+  year    = {2026},
+  note    = {Manuscript}
 }
 ```
 
-Also see `CITATION.cff`.
+See [`CITATION.cff`](CITATION.cff) for machine-readable format.
 
-## License
-No license file has been specified yet. Add a license before making the repository public if reuse terms should be explicit.
-# Acknowledgements
-This work was supported by the National Natural Science Foundation of China (U23A2090, 22293011, 22403087) and the Fundamental Research Funds for the Central Universities (WK2060000084). The authors acknowledge the support from the Supercomputing Center of the University of Science and Technology of China. The AI-driven experiments, simulations and model training were performed on the robotic AI-Scientist platform of the Chinese Academy of Sciences. During the preparation of this manuscript, the authors used LLM for language polishing and improving the overall readability of the text.
+---
+
+## 🎓 Acknowledgements
+
+This work was supported by:
+- National Natural Science Foundation of China (U23A2090, 22293011, 22403087)
+- Fundamental Research Funds for the Central Universities (WK2060000084)
+- Supercomputing Center, University of Science and Technology of China
+- Robotic AI-Scientist platform, Chinese Academy of Sciences
+
+**Disclosure**: LLMs were used for language polishing during manuscript preparation.
+
+---
+
+## 📄 License
+
+[[CC BY 4.0](https://licensebuttons.net/l/by/4.0/88x31.png)](https://creativecommons.org/licenses/by/4.0/)
+
+This work is licensed under [Creative Commons Attribution 4.0 International](LICENSE).
+
+---
+
+<div align="center">
+
+**[Data & Code Archive](https://zenodo.org/records/20602506)** | **[Documentation](docs/)** | **[Issues](../../issues)**
+
+Made with ❤️ for the polymer science community
