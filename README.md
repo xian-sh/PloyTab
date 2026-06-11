@@ -3,9 +3,15 @@
 Structure-informed reconstruction of sparse polymer property profiles.
 
 PolyTab is the code companion for the manuscript **"PolyTab: Structure-Informed Reconstruction of Sparse Polymer Property Profiles"**. The framework reconstructs fragmented polymer property records into multi-property profiles by combining PSMILES-derived structural embeddings with partially observed property tables. It uses quartile-based classification for distribution-aware initialization and stacked adaptive regression layers for coarse-to-fine refinement while preserving observed entries.
-<img width="825" height="442" alt="image" src="https://github.com/user-attachments/assets/4fd9303f-ae12-4daf-bbf0-23db9f13d05b" />
+<!-- <img width="825" height="442" alt="image" src="https://github.com/user-attachments/assets/4fd9303f-ae12-4daf-bbf0-23db9f13d05b" /> -->
 
-<img width="4569" height="1240" alt="02cae4c6214dd9b6234b4d3da92fafe7" src="https://github.com/user-attachments/assets/85c653ad-b10d-4dad-b8ff-96a5abcfcd80" />
+PolyTab framework overview. Schematic of the structure-informed reconstruction pipeline for sparse polymer property matrices. Starting from polymer SMILES (PSMILES) strings, structural embeddings are extracted and fused with a partially observed property table. A quartile-based classification module initializes missing entries, followed by stacked adaptive regression layers that refine predictions in a coarse-to-fine manner while preserving observed values. The output is a complete multi-property profile.
+
+![PolyTab TOC](https://github.com/user-attachments/assets/85c653ad-b10d-4dad-b8ff-96a5abcfcd80)
+*Figure 1: PSMILES → embeddings → quartile init → adaptive regression → complete profiles.*
+
+![PolyTab main figure](https://github.com/user-attachments/assets/3a087339-f999-4615-8624-228144666185)
+*Figure 2: Architecture details (a–c) and reconstruction performance across sparsity levels (d).*
 
 ## Repository Layout 
 
