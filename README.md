@@ -114,7 +114,7 @@ Figures are saved to `figures/`.
 @article{si2026polytab,
   title = {PolyTab: Structure-Informed Reconstruction of Sparse Polymer Property Profiles},
   author = {Si, Zhan and Ge, Bojun and Hu, Jingjing and Wang, Chen and Yu, Haizhu and Liu, Deguang and Fu, Yao},
-  journal = {Chinese Chemical Letters},
+  journal = {journal},
   year = {2026},
   note = {Manuscript}
 }
@@ -125,5 +125,5 @@ Also see `CITATION.cff`.
 ## License
 
 No license file has been specified yet. Add a license before making the repository public if reuse terms should be explicit.
-# PloyTab
-# PloyTab
+# Acknowledgements
+This work was supported by the National Natural Science Foundation of China (U23A2090, 22293011, 22403087) and the Fundamental Research Funds for the Central Universities (WK2060000084). The authors acknowledge the support from the Supercomputing Center of the University of Science and Technology of China. The AI-driven experiments, simulations and model training were performed on the robotic AI-Scientist platform of the Chinese Academy of Sciences. During the preparation of this manuscript, the authors used LLM for language polishing and improving the overall readability of the text. The authors reviewed and edited the AI-assisted output and take full responsibility for the content of the published article.
