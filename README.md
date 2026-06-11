@@ -1,7 +1,4 @@
-# PolyTab
-
-Structure-informed reconstruction of sparse polymer property profiles.
-
+# Structure-informed reconstruction of sparse polymer property profiles.
 Polymer discovery requires multi-property screening, but experimental data is frequently fragmented, resulting in profile-level sparsity where individual polymers have only partially reported property records. This incompleteness hinders multi-constraint decision-making, correlation analysis, and comprehensive materials selection. Existing solutions are limited: structure-based models often underuse co-observed property information, while table-based imputation methods neglect critical structural priors, leading to unstable associations under extreme sparsity.
 <!-- <img width="825" height="442" alt="image" src="https://github.com/user-attachments/assets/4fd9303f-ae12-4daf-bbf0-23db9f13d05b" /> -->
 
