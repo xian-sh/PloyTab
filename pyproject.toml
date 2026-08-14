@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "polytab"
+version = "0.1.0"
+description = "Structure-informed reconstruction of sparse polymer property profiles."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "numpy",
+    "pandas",
+    "scipy",
+    "scikit-learn",
+    "matplotlib",
+    "torch",
+    "transformers",
+    "tabpfn",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
