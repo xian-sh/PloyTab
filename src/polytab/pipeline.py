@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-# Auto-generated from ELE-4run_polyBERT_cascade_260107.ipynb
-
-# -*- coding: utf-8 -*-
 import os
 import argparse
 from pathlib import Path
