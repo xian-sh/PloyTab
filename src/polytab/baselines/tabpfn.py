@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-# Auto-generated from TabPFN.ipynb
-
 import os
 import sys
 from pathlib import Path
