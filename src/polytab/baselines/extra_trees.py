@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-# Auto-generated from ETR.ipynb
-
 import os
 from pathlib import Path
 import pandas as pd
