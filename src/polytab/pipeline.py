@@ -80,7 +80,7 @@ def _basename_no_ext(path):
 class BERTFeatureExtractor:
     """polyBERT特征提取器"""
     def __init__(self, model_path, max_length=512):
-        self.model_path = "HAYDERphd/polyBERT" #model_path
+        self.model_path = model_path
         self.max_length = max_length
         self.tokenizer = None
         self.model = None
